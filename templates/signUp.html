@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %} VubaVuba-SignUp {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+     <!--    navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Vuba-Vuba</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+          </ul>
+          <form class="d-flex">
+            <a id="btn-signUp" class="btn btn-outline-success" href="/signUp">Sign up</a>
+          </form>
+          <script>
+            let signUpBtn = document.getElementById('btn-signUp')
+            console.log(signUpBtn.trigger('active'))
+            signUpBtn.trigger('active')
+          </script>
+        </div>
+      </div>
+    </nav>
+    <!-- signUp form -->
+    <div class="row justify-content-around">
+      <div class="col-md-4 m-5">
+        <form action="/signUp" method="POST">
+          <div class="col-signup">
+            <div class="text-center mb-3">
+              <h3>SignUp With VubaVuba</h3>
+            </div>
+            <div class="mb-3">
+              <label for="Email_signUp" class="form-label">Email address</label>
+              <input type="email" value="" class="form-control" id="Email_signUp" name="Email_signUp" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+              <label for="Passowrd_signUp" class="form-label">Password</label>
+              <input type="password" class="form-control" id="Passowrd_signUp" name="Passowrd_signUp" placeholder="Passowrd">
+            </div>
+          </div>
+          <div class="mb-3 text-center mt-4">
+            <button class="btn btn-success" type="submit">Register</button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}

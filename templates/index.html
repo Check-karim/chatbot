@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %} VubaVuba-HomePage {% endblock %}
+
+{% block content %}
+<div class="container-fluid main-window">
+    <!--    navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Vuba-Vuba</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+          </ul>
+          <form class="d-flex">
+            <a class="btn btn-outline-success" href="/signUp">Sign up</a>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <!--   slide carousel -->
+    <div id="carouselExampleInterval" class="carousel slide row" data-bs-ride="carousel">
+      <div class="carousel-inner text-center pt-5" style="width: 75%;">
+          <div class="carousel-item active slide_css" data-bs-interval="10000" >
+<!--            Text 1  home page -->
+            <h3 class="slide-color">Get groceries and convenience store essentials
+Grocery delivery, exactly how you want it.</h3>
+      </div>
+        <div class="carousel-item slide_css"  data-bs-interval="2000">
+<!--            Text 2 home Page -->
+            <h3 class="slide-color">Everything you crave, delivered.
+Your favorite local restaurants</h3>
+        </div>
+        <div class="carousel-item slide_css">
+<!--            Text 3 home page -->
+            <h3 class="slide-color">Grow your business with Vuba Vuba
+Partner with Vuba Vuba Today to reach new
+customers, increase order volume, and drive
+more sales</h3>
+        </div>
+      </div>
+<!--      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">-->
+<!--        <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
+<!--        <span class="visually-hidden">Previous</span>-->
+<!--      </button>-->
+<!--      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">-->
+<!--        <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
+<!--        <span class="visually-hidden">Next</span>-->
+<!--      </button>-->
+    </div>
+
+</div>
+{% endblock %}
+
+{% block script_chatBot %}
+<!--    chat box -->
+<div class="container-fluid">
+    <div class="chatbox">
+        <div class="chatbox__support">
+            <div class="chatbox__header">
+                <div class="chatbox__image--header">
+                    <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png" alt="image">
+                </div>
+                <div class="chatbox__content--header">
+                    <h4 class="chatbox__heading--header">Chat support</h4>
+                    <p class="chatbox__description--header">Hi. My name is Sam. How can I help you?</p>
+                </div>
+            </div>
+            <div class="chatbox__messages">
+                <div></div>
+            </div>
+            <div class="chatbox__footer">
+                <input type="text" placeholder="Write a message...">
+                <button class="chatbox__send--footer send__button">Send</button>
+            </div>
+        </div>
+        <div class="chatbox__button">
+            <button><img src="{{ url_for('static', filename='images/chatbox-icon.svg') }}" /></button>
+        </div>
+    </div>
+</div>
+<script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson }};
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}

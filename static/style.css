@@ -198,3 +198,29 @@ body {
     box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
     cursor: pointer;
 }
+
+.main-window{
+    background-image : url('images/1K6A0514.webp');
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.slide-color{
+    color: #00733d;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.slide_css{
+    width: 50% !important;
+    text-align: end;
+    background-color: #fff;
+    background-clip: text;
+}
+
+.col-signup{
+    background-color: #198754;
+    color: #fff;
+    padding: 5%;
+}

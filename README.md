@@ -18,7 +18,7 @@ $ . venv/bin/activate
 ```
 Install dependencies
 ```
-$ (venv) pip install Flask torch torchvision nltk
+$ (venv) pip install Flask torch torchvision nltk Flask-Sqlalchemy
 ```
 Install nltk package
 ```
@@ -65,4 +65,14 @@ else:
     ssl._create_default_https_context = _create_unverified_https_context
 
 nltk.download()
+````
+
+ADDING DB
+````
+pip install pymysql MySQLdb
+
+>>> python
+>>> from app import db
+>>> db.create_all()
+
 ````
