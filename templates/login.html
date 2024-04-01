@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %} VubaVuba-Login {% endblock %}
+
+{% block content %}
+    <!-- signUp form -->
+    <div class="row justify-content-around" style="margin-right: 0px;margin-left: 0px;">
+      <div class="col-md-4 mt-5 mb-5">
+        <form action="/login" method="POST">
+          <div class="col-signup">
+            <div class="text-center mb-3">
+              <h3>Login To VubaVuba</h3>
+            </div>
+            <div class="mb-3">
+              <label for="Email_login" class="form-label">Email address</label>
+              <input type="email" value="" class="form-control" id="Email_login" name="Email_login" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+              <label for="Password_login" class="form-label">Password</label>
+              <input type="password" class="form-control" id="Password_login" name="Password_login" placeholder="Passowrd">
+            </div>
+          </div>
+          <div class="mb-3 text-center mt-4">
+            <button class="btn btn-success" type="submit">Login</button>
+          </div>
+        </form>
+      </div>
+</div>
+{% endblock %}
