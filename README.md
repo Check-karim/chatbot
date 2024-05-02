@@ -1,10 +1,5 @@
-# Chatbot Deployment with Flask and JavaScript
-
-In this tutorial we deploy the chatbot I created in [this](https://github.com/python-engineer/pytorch-chatbot) tutorial with Flask and JavaScript.
-
-This gives 2 deployment options:
-- Deploy within Flask app with jinja2 template
-- Serve only the Flask prediction API. The used html and javascript files can be included in any Frontend application (with only a slight modification) and can run completely separate from the Flask App then.
+## migration initialization
+$ flask db init
 
 ## Initial Setup:
 This repo currently contains the starter files.
@@ -75,4 +70,14 @@ pip install pymysql MySQLdb
 >>> from app import db
 >>> db.create_all()
 
+````
+
+to run the back-end
+````
+uvicorn main:app --reload
+````
+
+to run the ngork
+````
+ngrok http 8000
 ````

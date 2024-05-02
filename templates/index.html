@@ -3,56 +3,12 @@
 
 {% block classContainer %}class="container-fluid main-window"{% endblock %}
 {% block content %}
-<!--   slide carousel -->
-    <div id="carouselExampleInterval" class="carousel slide row" data-bs-ride="carousel">
-      <div class="carousel-inner text-center pt-5" style="width: 75%;">
-          <div class="carousel-item active slide_css" data-bs-interval="10000" >
-<!--            Text 1  home page -->
-            <h3 class="slide-color">Get groceries and convenience store essentials
-Grocery delivery, exactly how you want it.</h3>
-      </div>
-        <div class="carousel-item slide_css"  data-bs-interval="2000">
-<!--            Text 2 home Page -->
-            <h3 class="slide-color">Everything you crave, delivered.
-Your favorite local restaurants</h3>
-        </div>
-        <div class="carousel-item slide_css">
-<!--            Text 3 home page -->
-            <h3 class="slide-color">Grow your business with Vuba Vuba
-Partner with Vuba Vuba Today to reach new
-customers, increase order volume, and drive
-more sales</h3>
-        </div>
-      </div>
-
-</div>
 {% endblock %}
-
 {% block script_chatBot %}
 <!--    chat box -->
 <div class="container-fluid">
-    <div class="chatbox">
-        <div class="chatbox__support">
-            <div class="chatbox__header">
-                <div class="chatbox__image--header">
-                    <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png" alt="image">
-                </div>
-                <div class="chatbox__content--header">
-                    <h4 class="chatbox__heading--header">Chat support</h4>
-                    <p class="chatbox__description--header">Hi. My name is Sam. How can I help you?</p>
-                </div>
-            </div>
-            <div class="chatbox__messages">
-                <div></div>
-            </div>
-            <div class="chatbox__footer">
-                <input type="text" placeholder="Write a message...">
-                <button class="chatbox__send--footer send__button">Send</button>
-            </div>
-        </div>
-        <div class="chatbox__button">
-            <button><img src="{{ url_for('static', filename='images/chatbox-icon.svg') }}" /></button>
-        </div>
+    <div>
+    <iframe height="430" width="350" src="https://console.dialogflow.com/api-client/demo/embedded/a812eb37-4f0c-420c-80ee-a80dc11f204b"></iframe>
     </div>
 </div>
 <script>
