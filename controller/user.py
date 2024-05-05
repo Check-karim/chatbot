@@ -1,5 +1,5 @@
 from flask import request
-from models.user import User
+from models.models import User
 from extensions import db
 
 def add_user_function():

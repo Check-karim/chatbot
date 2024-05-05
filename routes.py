@@ -1,7 +1,7 @@
 from flask import Blueprint,render_template,request,flash,session,redirect
 from controller.user import add_user_function,edit_user_function
 import sys
-from models.user import User
+from models.models import User
 
 main = Blueprint('main', __name__ ) #routename= main
 
