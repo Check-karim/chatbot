@@ -8,7 +8,6 @@ class User(db.Model):
     password = db.Column(db.String(255))
     created_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now(),onupdate=db.func.now())
-    orders = db.relationship('Orders', backref='user')
 
     @property
     def data(self):
@@ -46,9 +45,9 @@ class Order_tracking(db.Model):
 
     order_id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(255),nullable=False)
+    user_id = db.Column(db.Integer,nullable=False)
     created_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now(),onupdate=db.func.now())
-    orders = db.relationship('Orders', backref='order_trackings')
 
     def __init__(self,order_id,status):
         self.order_id = order_id
@@ -70,7 +69,6 @@ class Food_items(db.Model):
     price = db.Column(db.String(255))
     created_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now(),onupdate=db.func.now())
-    orders = db.relationship('Orders', backref='food_item')
 
     def __init__(self,item_id,name,price):
         self.item_id = item_id
@@ -91,10 +89,10 @@ class Orders(db.Model):
     __tablename__ = 'orders'
 
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('order_tracking.order_id'))
-    item_id = db.Column(db.Integer, db.ForeignKey('food_items.item_id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    quantity = db.Column(db.Integer)
+    order_id = db.Column(db.Integer,nullable=False)
+    item_id = db.Column(db.Integer,nullable=False)
+    user_id = db.Column(db.Integer,nullable=False)
+    quantity = db.Column(db.Integer,nullable=False)
     total_price = db.Column(db.String(255),nullable=False)
     created_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now(),onupdate=db.func.now())

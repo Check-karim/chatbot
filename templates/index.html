@@ -4,15 +4,15 @@
 {% block classContainer %}class="container-fluid main-window"{% endblock %}
 {% block content %}
 {% endblock %}
-{% block script_chatBot %}
-<!--    chat box -->
-<div class="container-fluid">
-    <div>
-    <iframe height="430" width="350" src="https://console.dialogflow.com/api-client/demo/embedded/a812eb37-4f0c-420c-80ee-a80dc11f204b"></iframe>
-    </div>
-</div>
-<script>
+    {% block script_chatBot %}
+        <!--    chat box -->
+        <div class="container-fluid">
+            <div>
+            <iframe height="430" width="350" src="https://console.dialogflow.com/api-client/demo/embedded/a812eb37-4f0c-420c-80ee-a80dc11f204b"></iframe>
+            </div>
+        </div>
+    {% endblock %}
+<!-- <script>
     $SCRIPT_ROOT = {{ request.script_root|tojson }};
-</script>
+</script> -->
 <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
-{% endblock %}

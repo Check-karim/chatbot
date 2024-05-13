@@ -75,9 +75,11 @@ pip install pymysql MySQLdb
 to run the back-end
 ````
 uvicorn main:app --reload
+uvicorn main:app --port 7852  --reload
 ````
 
 to run the ngork
 ````
 ngrok http 8000
+ngrok http 7852
 ````

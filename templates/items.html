@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %} VubaVuba-Settings {% endblock %}
+{% block content %}
+    <div class="row">
+        <!-- left side -->
+        <div class="col-2">
+            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" >
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                  <li class="nav-item">
+                    <a href="/dashboard" class="nav-link link-dark" aria-current="page">
+                      Dashboard
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/settings" class="nav-link link-dark">
+                      Settings
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/items" class="nav-link active">
+                      Items
+                    </a>
+                  </li>
+                </ul>
+                <hr>
+          </div>
+        </div>
+        <!-- end left side -->
+
+        <!-- right side -->
+        <div class="col-8">
+          {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+          <div class="row justify-content-around">
+            <h3>Update Profile</h3>
+            <div class="col-md-4">
+              <form action="/edit-user" method="post">
+                <div class="mb-3">
+                  <label for="Email_signUp" class="form-label">Email address</label>
+                  <input type="email" value="{{ user.email }}" class="form-control" id="email_update" name="email_update" placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                  <label for="Passowrd_signUp" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="passowrd_update" name="passowrd_update" placeholder="Passowrd">
+                </div>
+                <div class="mb-3 text-center mt-4">
+                  <button class="btn btn-success" type="submit">Update</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- end right side -->
+    </div>
+{% endblock %}

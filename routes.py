@@ -1,15 +1,37 @@
-from flask import Blueprint,render_template,request,flash,session,redirect
+from flask import Blueprint,render_template,request,flash,session,redirect,jsonify,make_response
 from controller.user import add_user_function,edit_user_function
 import sys
 from models.models import User
+from helper import generic_helper
+from controller import chat
 
 main = Blueprint('main', __name__ ) #routename= main
 
+@main.post('/chat')
+async def handle_request():
+    payload = request.get_json()
+    intent = payload['queryResult']['intent']['displayName']
+    parameters = payload['queryResult']['parameters']
+    output_contexts = payload['queryResult']['outputContexts']
+    session_id = generic_helper.extract_session_id(output_contexts[0]["name"])
+
+    print('session', session_id)
+    intent_handler_dict = {
+        'order.add - context: ongoing-order': chat.add_to_order,
+        'order.remove - context: ongoing-order': chat.remove_from_order,
+        'order.complete - context: ongoing-order': chat.complete_order,
+        'track.order - context: ongoing-tracking': chat.track_order
+    }
+
+    return intent_handler_dict[intent](parameters, session_id)
+
 @main.route('/', methods = ['GET'])
 def home():
-    data = User.get_all()
-    print(data)
-    return render_template("index.html")
+    if session.get('user_id') is None:
+        return render_template("index.html")
+    else:
+        user = User.get_by_id(session['user_id'])
+        return render_template("index.html", user=user)
 
 @main.route('/signUp', methods= ['GET','POST'])
 def signup():
@@ -19,7 +41,7 @@ def signup():
     print(data, file= sys.stderr)
     return render_template("signUp.html", data=data)
 
-@main.route('/login/', methods= ['GET','POST'])
+@main.route('/login', methods= ['GET','POST'])
 def login():
     if session.get('user_id') is not None:
         return redirect('/dashboard')
@@ -29,9 +51,12 @@ def login():
 
         user = User.get_by_email_password(email,password)
         if user:
-            session['user_id'] = user.id
+            id = user.id
+            session['user_id'] = id
+            response = make_response(redirect('/dashboard'))
+            response.set_cookie("user_id", str(id))
             flash("Logged in Successfully ")
-            return redirect('/dashboard')
+            return response
         else :
             flash("incorrect password or email")
     return render_template('login.html')
@@ -40,14 +65,29 @@ def login():
 def dashboard():
     if session.get('user_id') is not None:
         user = User.get_by_id(session['user_id'])
-        return render_template('dashboard.html', user=user)
+        if user.email == 'admin@admin.com':
+            return redirect('/dashboard_admin')
+        else:
+            return render_template('dashboard.html', user=user)
+    return redirect('/login')
+
+@main.route('/dashboard_admin')
+def dashboard_admin():
+    if session.get('user_id') is not None:
+        user = User.get_by_id(session['user_id'])
+        if user.email == 'admin@admin.com':
+            return render_template('dashboard_admin.html', user=user)
+        else:
+            return redirect('/dashboard')
     return redirect('/login')
 
 @main.route('/logout')
 def logout():
     if session.get('user_id') is not None:
+        response = make_response(redirect('/login'))
+        response.delete_cookie('user_id')
         session.pop('user_id', None)
-        return redirect('/')
+        return response
     else:
         return redirect('/dashboard')
     
