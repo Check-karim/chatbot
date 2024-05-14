@@ -127,7 +127,56 @@ def get_order_status(order_id, user_id):
         return result[0]
     else:
         return None
+    
+def get_client_order(user_id):
+    cursor = cnx.cursor(dictionary=True)
 
+    # Executing the SQL query to fetch the order status
+    query = f"SELECT " \
+            f"ot.order_id, ot.status, ot.created_at, o.total_price, o.quantity " \
+            f"FROM `order_tracking` as ot " \
+            f"LEFT JOIN orders as o ON ot.order_id = o.order_id " \
+            f"LEFT JOIN food_items as f ON o.item_id = f.item_id " \
+            f"WHERE o.user_id={user_id} " \
+            f"" 
+    cursor.execute(query)
+
+    # Fetching the result
+    result = cursor.fetchall()
+
+    # Closing the cursor
+    cursor.close()
+
+    # Returning the order status
+    if result:
+        return result
+    else:
+        return None
+
+def get_orders():
+    cursor = cnx.cursor(dictionary=True)
+
+    # Executing the SQL query to fetch the order status
+    query = f"SELECT " \
+            f"ot.order_id,u.email, ot.status, ot.created_at, o.total_price, o.quantity " \
+            f"FROM `order_tracking` as ot " \
+            f"LEFT JOIN orders as o ON ot.order_id = o.order_id " \
+            f"LEFT JOIN food_items as f ON o.item_id = f.item_id " \
+            f"LEFT JOIN users as u ON o.user_id = u.id " \
+            f"" 
+    cursor.execute(query)
+
+    # Fetching the result
+    result = cursor.fetchall()
+
+    # Closing the cursor
+    cursor.close()
+
+    # Returning the order status
+    if result:
+        return result
+    else:
+        return None
 
 if __name__ == "__main__":
     # print(get_total_order_price(56))

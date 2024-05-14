@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %} VubaVuba-About {% endblock %}
+
+{% block classContainer %}class="container-fluid main-window-about"{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col cool-image">
+        <img class="image_about_1" src="{{ url_for('static', filename='images/1K6A0489.webp') }}" alt="" srcset="">
+    </div>
+    <div class="col cool-image">
+        <img class="image_about_2" src="{{ url_for('static', filename='images/1K6A0514.webp') }}" alt="" srcset="">
+    </div>
+    <div class="col cool-image">
+        <img class="image_about_3" src="{{ url_for('static', filename='images/1K6A0614.webp') }}" alt="" srcset="">
+    </div>
+</div>
+<div class="row">
+    <div class="col pt-5 text-center" style="color : #198754;">
+        <h2><p>Order anything and track it in real time</p> with the Vuba Vuba App.</h2>
+    </div>
+</div>
+{% endblock %}

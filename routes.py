@@ -2,7 +2,7 @@ from flask import Blueprint,render_template,request,flash,session,redirect,jsoni
 from controller.user import add_user_function,edit_user_function
 import sys
 from models.models import User
-from helper import generic_helper
+from helper import generic_helper,db_helper
 from controller import chat
 
 main = Blueprint('main', __name__ ) #routename= main
@@ -32,6 +32,14 @@ def home():
     else:
         user = User.get_by_id(session['user_id'])
         return render_template("index.html", user=user)
+    
+@main.route('/about', methods = ['GET'])
+def about():
+    if session.get('user_id') is None:
+        return render_template("about.html")
+    else:
+        user = User.get_by_id(session['user_id'])
+        return render_template("about.html", user=user)
 
 @main.route('/signUp', methods= ['GET','POST'])
 def signup():
@@ -68,7 +76,9 @@ def dashboard():
         if user.email == 'admin@admin.com':
             return redirect('/dashboard_admin')
         else:
-            return render_template('dashboard.html', user=user)
+            orders = db_helper.get_client_order(user.id)
+            print(orders)
+            return render_template('dashboard.html', user=user, orders=orders)
     return redirect('/login')
 
 @main.route('/dashboard_admin')
@@ -76,7 +86,9 @@ def dashboard_admin():
     if session.get('user_id') is not None:
         user = User.get_by_id(session['user_id'])
         if user.email == 'admin@admin.com':
-            return render_template('dashboard_admin.html', user=user)
+            orders = db_helper.get_orders()
+            print(orders)
+            return render_template('dashboard_admin.html', user=user,orders=orders)
         else:
             return redirect('/dashboard')
     return redirect('/login')

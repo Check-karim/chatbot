@@ -33,34 +33,31 @@
         <div class="col-8">
           <div class="row">
               <div class="col">
-                <h4>Your orders</h4>
+                <h4>Manage Orders</h4>
                 <table class="table">
                   <thead>
                     <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">First</th>
-                      <th scope="col">Last</th>
-                      <th scope="col">Handle</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Order ID</th>
+                      <th scope="col">Quantity</th>
+                      <th scope="col">Total Price</th>
+                      <th scope="col">Created At</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Action</th>
                     </tr>
                   </thead>
                   <tbody>
+                    {% for o in orders %}
                     <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
+                      <td>{{o.email}}</td>
+                      <td>{{o.order_id}}</td>
+                      <td>{{o.quantity}}</td>
+                      <td>{{o.total_price}}</td>
+                      <td>{{o.created_at}}</td>
+                      <td>{{o.status}}</td>
+                      <td></td>
                     </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Jacob</td>
-                      <td>Thornton</td>
-                      <td>@fat</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td colspan="2">Larry the Bird</td>
-                      <td>@twitter</td>
-                    </tr>
+                    {% endfor %}
                   </tbody>
                 </table>
               </div>
