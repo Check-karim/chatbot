@@ -7,15 +7,14 @@ from controller import chat
 
 main = Blueprint('main', __name__ ) #routename= main
 
-@main.post('/chat')
+@main.route('/chat', methods=['POST'])
 async def handle_request():
-    payload = request.get_json()
+    payload = request.get_json(force=True)
     intent = payload['queryResult']['intent']['displayName']
     parameters = payload['queryResult']['parameters']
     output_contexts = payload['queryResult']['outputContexts']
     session_id = generic_helper.extract_session_id(output_contexts[0]["name"])
 
-    print('session', session_id)
     intent_handler_dict = {
         'order.add - context: ongoing-order': chat.add_to_order,
         'order.remove - context: ongoing-order': chat.remove_from_order,

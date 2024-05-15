@@ -17,9 +17,9 @@ for cookie in cookies:
 
 def save_to_db(order: dict):
     if id is None:
-        return jsonify(content={
+        return {
             "fulfillmentText": "Please Login or SignUp First"
-        })
+        }
     else:
         next_order_id = db_helper.get_next_order_id()
         # Insert individual items along with quantity in orders table
@@ -43,14 +43,14 @@ def save_to_db(order: dict):
 
 def remove_from_order(parameters: dict, session_id: str):
     if id is None:
-        return jsonify(content={
+        return {
             "fulfillmentText": "Please Login or SignUp First"
-        })
+        }
     else:
         if session_id not in inprogress_orders:
-            return jsonify(content={
+            return {
                 "fulfillmentText": "I'm having a trouble finding your order. Sorry! Can you place a new order please?"
-            })
+            }
 
         food_items = parameters["food-item"]
         current_order = inprogress_orders[session_id]
@@ -77,15 +77,15 @@ def remove_from_order(parameters: dict, session_id: str):
             order_str = generic_helper.get_str_from_food_dict(current_order)
             fulfillment_text += f" Here is what is left in your order: {order_str} , Anything else"
 
-        return jsonify(content={
+        return {
             "fulfillmentText": fulfillment_text
-        })
+        }
 
 def complete_order(parameters: dict, session_id: str):
     if id is None:
-        return jsonify(content={
+        return {
             "fulfillmentText": "Please Login or SignUp First"
-        })
+        }
     else:
         if session_id not in inprogress_orders:
             fulfillment_text = "I'm having a trouble finding your order. Sorry! Can you place a new order please?"
@@ -104,15 +104,15 @@ def complete_order(parameters: dict, session_id: str):
 
             del inprogress_orders[session_id]
 
-        return jsonify(content={
+        return {
             "fulfillmentText": fulfillment_text
-        })
+        }
 
 def add_to_order(parameters: dict, session_id: str):
     if id is None:
-        return jsonify(content={
+        return {
             "fulfillmentText": "Please Login or SignUp First"
-        })
+        }
     else:
         food_items = parameters["food-item"]
         quantities = parameters["number"]
@@ -132,15 +132,15 @@ def add_to_order(parameters: dict, session_id: str):
             order_str = generic_helper.get_str_from_food_dict(inprogress_orders[session_id])
             fulfillmentText = f"So far you have: {order_str}. Do you need anything else?"
 
-        return jsonify(content={
+        return {
             "fulfillmentText": fulfillmentText
-        })
+        }
 
 def track_order(parameters: dict, session_id: str):
     if id is None:
-        return jsonify(content={
+        return {
             "fulfillmentText": "Please Login or SignUp First"
-        })
+        }
     else:
         order_id = int(parameters['order_id'])
         order_status = db_helper.get_order_status(order_id, id)
@@ -151,6 +151,6 @@ def track_order(parameters: dict, session_id: str):
 
         print('track',fulfillment_text)
 
-        return jsonify(content={
+        return {
             "fulfillmentText": fulfillment_text
-        })
+        }
