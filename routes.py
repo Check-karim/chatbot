@@ -3,7 +3,7 @@ from controller.user import add_user_function,edit_user_function
 import sys
 from models.models import User
 from helper import generic_helper,db_helper
-from controller import chat
+from controller import chat,order as order_function
 
 main = Blueprint('main', __name__ ) #routename= main
 
@@ -30,6 +30,7 @@ def home():
         return render_template("index.html")
     else:
         user = User.get_by_id(session['user_id'])
+        print(user)
         return render_template("index.html", user=user)
     
 @main.route('/about', methods = ['GET'])
@@ -55,7 +56,6 @@ def login():
     if request.method == 'POST':
         email = request.form['Email_login']
         password = request.form['Password_login']
-
         user = User.get_by_email_password(email,password)
         if user:
             id = user.id
@@ -76,7 +76,6 @@ def dashboard():
             return redirect('/dashboard_admin')
         else:
             orders = db_helper.get_client_order(user.id)
-            print(orders)
             return render_template('dashboard.html', user=user, orders=orders)
     return redirect('/login')
 
@@ -86,8 +85,19 @@ def dashboard_admin():
         user = User.get_by_id(session['user_id'])
         if user.email == 'admin@admin.com':
             orders = db_helper.get_orders()
-            print(orders)
             return render_template('dashboard_admin.html', user=user,orders=orders)
+        else:
+            return redirect('/dashboard')
+    return redirect('/login')
+
+@main.route('/update-order/<int:id>', methods=['POST'])
+def update(id):
+    if session.get('user_id') is not None:
+        user = User.get_by_id(session['user_id'])
+        if user.email == 'admin@admin.com':
+            data = order_function.update_order_function(id)
+            flash("order id "+str(data.order_id)+" Has been Updated to "+str(data.status))
+            return redirect('/dashboard')
         else:
             return redirect('/dashboard')
     return redirect('/login')

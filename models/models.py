@@ -59,6 +59,10 @@ class Order_tracking(db.Model):
             'status':self.status
         }
     
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.filter(cls.order_id == id).first()
+    
 
 # food_items table
 class Food_items(db.Model):

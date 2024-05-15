@@ -9,11 +9,11 @@ id="1"
 # id = request.cookies.get("user_id")
 # print(id)
 
-url = 'https://example.com'
-response = requests.get(url)
-cookies = response.cookies
-for cookie in cookies:
-    print(cookie.name, cookie.value)
+# url = 'https://example.com'
+# response = requests.get(url)
+# cookies = response.cookies
+# for cookie in cookies:
+#     print(cookie.name, cookie.value)
 
 def save_to_db(order: dict):
     if id is None:

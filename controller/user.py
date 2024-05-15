@@ -1,4 +1,4 @@
-from flask import request
+from flask import request,flash
 from models.models import User
 from extensions import db
 
@@ -18,7 +18,7 @@ def add_user_function():
             'email': user.email,
             'password': user.password
         }
-
+        flash(user.email+' Successfully created your account')
         return data
     
 def edit_user_function(data):

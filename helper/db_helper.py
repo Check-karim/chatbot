@@ -158,12 +158,13 @@ def get_orders():
 
     # Executing the SQL query to fetch the order status
     query = f"SELECT " \
-            f"ot.order_id,u.email, ot.status, ot.created_at, o.total_price, o.quantity " \
+            f"o.order_id,u.email, ot.status, ot.created_at, o.total_price, o.quantity " \
             f"FROM `order_tracking` as ot " \
             f"LEFT JOIN orders as o ON ot.order_id = o.order_id " \
             f"LEFT JOIN food_items as f ON o.item_id = f.item_id " \
-            f"LEFT JOIN users as u ON o.user_id = u.id " \
+            f"LEFT JOIN users as u ON o.user_id = u.id group by o.order_id DESC" \
             f"" 
+    print(query)
     cursor.execute(query)
 
     # Fetching the result
