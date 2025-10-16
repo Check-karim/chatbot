@@ -6,7 +6,8 @@ import generic_helper
 
 app = FastAPI()
 
-inprogress_orders = {}
+inprogress_courses = {}
+inprogress_remove_course = {}
 
 @app.post('/')
 async def handle_request(request: Request):
@@ -15,125 +16,124 @@ async def handle_request(request: Request):
     intent = payload['queryResult']['intent']['displayName']
     parameters = payload['queryResult']['parameters']
     output_contexts = payload['queryResult']['outputContexts']
+
     session_id = generic_helper.extract_session_id(output_contexts[0]["name"])
 
     intent_handler_dict = {
-        'order.add - context: ongoing-order': add_to_order,
-        'order.remove - context: ongoing-order': remove_from_order,
-        'order.complete - context: ongoing-order': complete_order,
-        'track.order - context: ongoing-tracking': track_order
+        'course.add - context: ongoing-add-course': add_course,
+        'course.add.complete : context - ongoing-add-course': complete_add_course,
+        'track.course - context: ongoing-tracking-course': track_course,
+        'course.remove - context-ongoing-remove-course': remove_course,
+        'course.remove.complete : context-ongoing-remove-course': complete_remove_course,
     }
 
     return intent_handler_dict[intent](parameters, session_id)
 
-def save_to_db(order: dict):
-    next_order_id = db_helper.get_next_order_id()
 
-    # Insert individual items along with quantity in orders table
-    for food_item, quantity in order.items():
-        rcode = db_helper.insert_order_item(
-            food_item,
-            quantity,
-            next_order_id
-        )
-
+def save_to_db(course_items: dict):
+    next_course_tracking_id = db_helper.get_next_course_tracking_id()
+    
+    for course_code in course_items:
+        rcode = db_helper.insert_course_item(next_course_tracking_id,course_code,'IN PROGRESS','2')
+            
         if rcode == -1:
             return -1
 
-    # Now insert order tracking status
-    db_helper.insert_order_tracking(next_order_id, "in progress")
+    db_helper.insert_course_tracking(next_course_tracking_id, "in progress","2")
+    return next_course_tracking_id
 
-    return next_order_id
+def remove_to_db(course_items: dict):
+    for course_code in course_items:
+        rcode = db_helper.remove_course_item(course_code,'2')
+            
+        if rcode == -1:
+            return -1
+    return 1
+
+def add_course(parameters: dict, session_id: str):
+    new_course = parameters['course_code']
+
+    # If the session already has some courses, merge them
+    if session_id in inprogress_courses:
+        existing_courses = inprogress_courses[session_id]
+        # Merge and remove duplicates
+        inprogress_courses[session_id] = list(set(existing_courses + new_course))
+    else:
+        # New session, just assign
+        inprogress_courses[session_id] = new_course
+
+    course_items = inprogress_courses[session_id]
+
+    fulfillementText = f"So far you have: {course_items}. Do you need anything else?"
+
+    return JSONResponse( content={
+        'fulfillmentText': fulfillementText
+    })
+
+def remove_course(parameters: dict, session_id: str):
+    new_course = parameters['course_code']
+
+    # If the session already has some courses, merge them
+    if session_id in inprogress_remove_course:
+        existing_courses = inprogress_remove_course[session_id]
+        # Merge and remove duplicates
+        inprogress_remove_course[session_id] = list(set(existing_courses + new_course))
+    else:
+        # New session, just assign
+        inprogress_remove_course[session_id] = new_course
+
+    course_items = inprogress_remove_course[session_id]
+
+    fulfillementText = f"So far you have: {course_items}. You want to remove. Do you need anything else?"
+
+    return JSONResponse( content={
+        'fulfillmentText': fulfillementText
+    })
+
+def complete_add_course(parameters: dict, session_id: str):
+    if session_id not in inprogress_courses:
+        fulfillmentText = "I'm having a trouble finding your course. Sorry! Can you add a course again please?"
+    else:
+        course_items = inprogress_courses[session_id]
+        course_tracking_id = save_to_db(course_items)
+
+        if course_tracking_id == -1:
+            fulfillmentText = "I'm having a trouble saving your course. Sorry! Can you add a course again please?"
+        else:
+            fulfillmentText = f"Your courses has been added successfully. "\
+            f" Your course tracking id is: {course_tracking_id} ."\
+                f" please use this id to track your course status."
+
+    return JSONResponse( content={
+        'fulfillmentText': fulfillmentText
+    })
+
+def complete_remove_course(parameters: dict, session_id: str):
+    if session_id not in inprogress_remove_course:
+        fulfillmentText = "I'm having a trouble finding your course. Sorry! Can you remove course again please?"
+    else:
+        course_items = inprogress_remove_course[session_id]
+        course_tracking_id = remove_to_db(course_items)
+
+        if course_tracking_id == -1:
+            fulfillmentText = "I'm having a trouble removing your course. Sorry! Can you remove course again please?"
+        else:
+            fulfillmentText = f"Your courses has been removed successfully. "
+
+    return JSONResponse( content={
+        'fulfillmentText': fulfillmentText
+    })
 
 
-def remove_from_order(parameters: dict, session_id: str):
-    if session_id not in inprogress_orders:
-        return JSONResponse(content={
-            "fulfillmentText": "I'm having a trouble finding your order. Sorry! Can you place a new order please?"
+def track_course(parameters: dict, session_id: str):
+    course_tracking_id = int(parameters['number'])
+    course_status = db_helper.get_course_tracking_status(course_tracking_id)
+
+    if course_status:
+        fulfillmentText = f"The course status for course tracking id: {course_tracking_id} is: {course_status}"
+    else:
+        fulfillmentText = f"No course found with course tracking id: {course_tracking_id}"
+
+    return JSONResponse( content={
+            'fulfillmentText': fulfillmentText
         })
-
-    food_items = parameters["food-item"]
-    current_order = inprogress_orders[session_id]
-
-    removed_items = []
-    no_such_items = []
-
-    for item in food_items:
-        if item not in current_order:
-            no_such_items.append(item)
-        else:
-            removed_items.append(item)
-            del current_order[item]
-
-    if len(removed_items) > 0:
-        fulfillment_text = f'Removed {",".join(removed_items)} from your order!'
-
-    if len(no_such_items) > 0:
-        fulfillment_text = f' Your current order does not have {",".join(no_such_items)}'
-
-    if len(current_order.keys()) == 0:
-        fulfillment_text += " Your order is empty!"
-    else:
-        order_str = generic_helper.get_str_from_food_dict(current_order)
-        fulfillment_text += f" Here is what is left in your order: {order_str} , Anything else"
-
-    return JSONResponse(content={
-        "fulfillmentText": fulfillment_text
-    })
-
-def complete_order(parameters: dict, session_id: str):
-    if session_id not in inprogress_orders:
-        fulfillment_text = "I'm having a trouble finding your order. Sorry! Can you place a new order please?"
-    else:
-        order = inprogress_orders[session_id]
-        order_id = save_to_db(order)
-        if order_id == -1:
-            fulfillment_text = "Sorry, I couldn't process your order due to a backend error. " \
-                               "Please place a new order again"
-        else:
-            order_total = int(db_helper.get_total_order_price(order_id))
-
-            fulfillment_text = f"Awesome. We have placed your order. " \
-                           f"Here is your order id # {order_id}. " \
-                           f"Your order total is {order_total} RWF which you can pay at the time of delivery!"
-
-        del inprogress_orders[session_id]
-
-    return JSONResponse(content={
-        "fulfillmentText": fulfillment_text
-    })
-
-def add_to_order(parameters: dict, session_id: str):
-    food_items = parameters["food-item"]
-    quantities = parameters["number"]
-
-    if len(food_items) != len(quantities):
-        fulfillmentText = "Sorry I didn't understand. Can you please specify food items and quantities clearly?"
-    else:
-        new_food_dict = dict(zip(food_items, quantities))
-
-        if session_id in inprogress_orders:
-            current_food_dict = inprogress_orders[session_id]
-            current_food_dict.update(new_food_dict)
-            inprogress_orders[session_id] = current_food_dict
-        else:
-            inprogress_orders[session_id] = new_food_dict
-
-        order_str = generic_helper.get_str_from_food_dict(inprogress_orders[session_id])
-        fulfillmentText = f"So far you have: {order_str}. Do you need anything else?"
-
-    return JSONResponse(content={
-        "fulfillmentText": fulfillmentText
-    })
-
-def track_order(parameters: dict, session_id: str):
-    order_id = int(parameters['order_id'])
-    order_status = db_helper.get_order_status(order_id)
-    if order_status:
-        fulfillment_text = f"The order status for order id: {order_id} is: {order_status}"
-    else:
-        fulfillment_text = f"No order found with order id: {order_id}"
-
-    return JSONResponse(content={
-        "fulfillmentText": fulfillment_text
-    })

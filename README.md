@@ -83,3 +83,9 @@ to run the ngork
 ngrok http 8000
 ngrok http 7852
 ````
+
+https://www.youtube.com/watch?v=2e5pQqBvGco
+
+# windows cmd
+python -m venv venv
+venv\Scripts\activate.bat

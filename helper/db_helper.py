@@ -7,7 +7,7 @@ cnx = mysql.connector.connect(
     host="localhost",
     user="root",
     password="",
-    database="vuba-bot"
+    database="college-inquiry"
 )
 
 # Function to call the MySQL stored procedure and insert an order item
@@ -133,11 +133,10 @@ def get_client_order(user_id):
 
     # Executing the SQL query to fetch the order status
     query = f"SELECT " \
-            f"ot.order_id, ot.status, ot.created_at, o.total_price, o.quantity " \
-            f"FROM `order_tracking` as ot " \
-            f"LEFT JOIN orders as o ON ot.order_id = o.order_id " \
-            f"LEFT JOIN food_items as f ON o.item_id = f.item_id " \
-            f"WHERE o.user_id={user_id} " \
+            f"* " \
+            f"FROM course_tracking as ct " \
+            f"left join course_items as ci on ct.course_tracking_id = ci.course_tracking_id " \
+            f"WHERE user_id={user_id} " \
             f"" 
     cursor.execute(query)
 

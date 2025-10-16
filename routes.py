@@ -3,7 +3,7 @@ from controller.user import add_user_function,edit_user_function
 import sys
 from models.models import User
 from helper import generic_helper,db_helper
-from controller import chat,order as order_function
+# from controller import chat,order as order_function
 
 main = Blueprint('main', __name__ ) #routename= main
 
@@ -62,10 +62,10 @@ def login():
             session['user_id'] = id
             response = make_response(redirect('/dashboard'))
             response.set_cookie("user_id", str(id))
-            flash("Logged in Successfully ")
+            flash("Logged in Successfully", 'success')
             return response
         else :
-            flash("incorrect password or email")
+            flash("Incorrect password or email. Please try again.", 'error')
     return render_template('login.html')
 
 @main.route('/dashboard')
@@ -96,7 +96,7 @@ def update(id):
         user = User.get_by_id(session['user_id'])
         if user.email == 'admin@admin.com':
             data = order_function.update_order_function(id)
-            flash("order id "+str(data.order_id)+" Has been Updated to "+str(data.status))
+            flash("Order ID "+str(data.order_id)+" has been updated to "+str(data.status), 'success')
             return redirect('/dashboard')
         else:
             return redirect('/dashboard')

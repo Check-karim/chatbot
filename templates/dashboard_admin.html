@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} VubaVuba-Dashboard {% endblock %}
+{% block title %} MKU Admin Portal - Dashboard {% endblock %}
 {% block content %}
       {% for message in get_flashed_messages() %}
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -15,7 +15,12 @@
                 <ul class="nav nav-pills flex-column mb-auto">
                   <li class="nav-item">
                     <a href="/dashboard" class="nav-link active" aria-current="page">
-                      Dashboard - Admin
+                      Admin Dashboard
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/items" class="nav-link link-dark">
+                      Courses
                     </a>
                   </li>
                   <li class="nav-item">
@@ -33,14 +38,14 @@
         <div class="col-8">
           <div class="row">
               <div class="col">
-                <h4>Manage Orders</h4>
+                <h4>Manage Student Records</h4>
                 <table class="table" id="myTable">
                   <thead>
                     <tr>
                       <th scope="col">Email</th>
-                      <th scope="col">Order ID</th>
-                      <th scope="col">Quantity</th>
-                      <th scope="col">Total Price</th>
+                      <th scope="col">Record ID</th>
+                      <th scope="col">Course</th>
+                      <th scope="col">Credits</th>
                       <th scope="col">Created At</th>
                       <th scope="col">Status</th>
                     </tr>
@@ -52,14 +57,14 @@
                         <td class="">{{o.email}}</td>
                         <td class="">{{o.order_id}}</td>
                         <td class="">{{o.quantity}}</td>
-                        <td class="">{{o.total_price}} RWF</td>
+                        <td class="">{{o.total_price}}</td>
                         <td class="">{{o.created_at}}</td>
                           <td class="">
                             <form action="{{ url_for('main.update', id=o.order_id) }}" method="post">
                               <select name="status" id="status">
-                                <option value="progress" {% if o.status == 'progress' %} selected {% endif %}>progress</option>
-                                <option value="delivered" {% if o.status == 'delivered' %} selected {% endif %}>delivered</option>
-                                <option value="received" {% if o.status == 'received' %} selected {% endif %}>received</option>
+                                <option value="progress" {% if o.status == 'progress' %} selected {% endif %}>In Progress</option>
+                                <option value="delivered" {% if o.status == 'delivered' %} selected {% endif %}>Completed</option>
+                                <option value="received" {% if o.status == 'received' %} selected {% endif %}>Enrolled</option>
                               </select>
                               <button type="submit" class="btn btn-secondary">Update</button>
                             </form>

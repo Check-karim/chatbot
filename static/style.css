@@ -20,7 +20,7 @@ body {
 }
 
 .main-window{
-    background-image : url('images/1K6A0514.webp');
+    /* background-image : url('images/1K6A0514.webp'); */
     height: 100vh;
     background-repeat: no-repeat;
     background-size: cover;

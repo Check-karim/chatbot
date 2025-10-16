@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} VubaVuba-Settings {% endblock %}
+{% block title %} MKU Student Portal - Courses {% endblock %}
 {% block content %}
     <div class="row">
         <!-- left side -->
@@ -19,7 +19,7 @@
                   </li>
                   <li class="nav-item">
                     <a href="/items" class="nav-link active">
-                      Items
+                      Courses
                     </a>
                   </li>
                 </ul>
@@ -36,22 +36,53 @@
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
           {% endfor %}
-          <div class="row justify-content-around">
-            <h3>Update Profile</h3>
-            <div class="col-md-4">
-              <form action="/edit-user" method="post">
-                <div class="mb-3">
-                  <label for="Email_signUp" class="form-label">Email address</label>
-                  <input type="email" value="{{ user.email }}" class="form-control" id="email_update" name="email_update" placeholder="name@example.com">
+          <div class="row">
+            <div class="col">
+              <h3>Available Courses</h3>
+              <p class="text-muted">Explore our range of academic programs at Mount Kenya University</p>
+              
+              <div class="row mt-4">
+                <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Computer Science</h5>
+                      <p class="card-text">Learn cutting-edge technology and programming skills.</p>
+                      <span class="badge bg-primary">4 Years</span>
+                      <span class="badge bg-success">120 Credits</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="mb-3">
-                  <label for="Passowrd_signUp" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="passowrd_update" name="passowrd_update" placeholder="Passowrd">
+                <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Business Administration</h5>
+                      <p class="card-text">Develop leadership and management skills.</p>
+                      <span class="badge bg-primary">4 Years</span>
+                      <span class="badge bg-success">120 Credits</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="mb-3 text-center mt-4">
-                  <button class="btn btn-success" type="submit">Update</button>
+                <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Medicine</h5>
+                      <p class="card-text">Train to become a medical professional.</p>
+                      <span class="badge bg-primary">6 Years</span>
+                      <span class="badge bg-success">180 Credits</span>
+                    </div>
+                  </div>
                 </div>
-              </form>
+                <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Engineering</h5>
+                      <p class="card-text">Build the future with engineering excellence.</p>
+                      <span class="badge bg-primary">4 Years</span>
+                      <span class="badge bg-success">120 Credits</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

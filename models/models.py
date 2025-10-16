@@ -39,18 +39,18 @@ class User(db.Model):
         return cls.query.filter(cls.email == email, cls.password == password).first()
 
 
-#  order_tracking table
-class Order_tracking(db.Model):
-    __tablename__ = 'order_tracking'
+#  course_tracking table
+class Course_tracking(db.Model):
+    __tablename__ = 'course_tracking'
 
-    order_id = db.Column(db.Integer, primary_key=True)
+    course_tracking_id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(255),nullable=False)
     user_id = db.Column(db.Integer,nullable=False)
     created_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now(),onupdate=db.func.now())
 
-    def __init__(self,order_id,status):
-        self.order_id = order_id
+    def __init__(self,course_id,status):
+        self.course_id = course_id
         self.status = status
     
     def __repr__(self):
@@ -64,55 +64,53 @@ class Order_tracking(db.Model):
         return cls.query.filter(cls.order_id == id).first()
     
 
-# food_items table
-class Food_items(db.Model):
-    __tablename__ = 'food_items'
+# course items table
+class Course_items(db.Model):
+    __tablename__ = 'course_items'
 
     item_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255),nullable=False,unique=True)
-    price = db.Column(db.String(255))
+    label = db.Column(db.String(255))
     created_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now(),onupdate=db.func.now())
 
-    def __init__(self,item_id,name,price):
+    def __init__(self,item_id,name,label):
         self.item_id = item_id
         self.name = name
-        self.price = price
+        self.label = label
     
     def __repr__(self):
          return{
             'item_id':self.item_id,
             'name':self.name,
-            'price':self.price
+            'label':self.label
         }
     
 
 
-# orders tables
-class Orders(db.Model):
-    __tablename__ = 'orders'
+# course tables
+class Courses(db.Model):
+    __tablename__ = 'courses'
 
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer,nullable=False)
+    course_id = db.Column(db.Integer,nullable=False)
     item_id = db.Column(db.Integer,nullable=False)
     user_id = db.Column(db.Integer,nullable=False)
-    quantity = db.Column(db.Integer,nullable=False)
-    total_price = db.Column(db.String(255),nullable=False)
+    label = db.Column(db.Integer,nullable=False)
     created_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime(),nullable=False, server_default=db.func.now(),onupdate=db.func.now())
 
-    def __init__(self,order_id,item_id,user_id,quantity,total_price):
-        self.order_id = order_id
+    def __init__(self,course_id,item_id,user_id,label):
+        self.course_id = course_id
         self.item_id = item_id
         self.user_id = user_id
-        self.quantity = quantity
-        self.total_price = total_price
+        self.label = label
     
     def __repr__(self):
          return{
-            'order_id':self.order_id,
+            'course_id':self.course_id,
             'item_id':self.item_id,
             'user_id':self.user_id,
-            'quantity':self.quantity,
-            'total_price':self.total_price,
+            'label':self.label,
         }
+

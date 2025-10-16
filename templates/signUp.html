@@ -1,20 +1,28 @@
 {% extends "base.html" %}
-{% block title %} VubaVuba-SignUp {% endblock %}
+{% block title %} MKU Student Portal - Register {% endblock %}
 
 {% block content %}
-    {% for message in get_flashed_messages() %}
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-    <!-- signUp form -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <!-- SignUp form -->
     <div class="row justify-content-around"  style="margin-right: 0px;margin-left: 0px;">
       <div class="col-md-4 m-5">
+        <!-- <div class="text-center mb-4">
+          <img src="https://www.mku.ac.ke/wp-content/uploads/2019/03/students-1-400x225.jpg" alt="MKU Students" class="img-fluid rounded mb-3" style="max-height: 200px;">
+        </div> -->
         <form action="/signUp" method="POST">
           <div class="col-signup">
             <div class="text-center mb-3">
-              <h3>SignUp With VubaVuba</h3>
+              <h3>Join Mount Kenya University</h3>
+              <p class="">Create your MKU Student Portal account</p>
             </div>
             <div class="mb-3">
               <label for="Email_signUp" class="form-label">Email address</label>
@@ -22,11 +30,14 @@
             </div>
             <div class="mb-3">
               <label for="Passowrd_signUp" class="form-label">Password</label>
-              <input type="password" class="form-control" id="Passowrd_signUp" name="Passowrd_signUp" placeholder="Passowrd">
+              <input type="password" class="form-control" id="Passowrd_signUp" name="Passowrd_signUp" placeholder="Password">
             </div>
           </div>
           <div class="mb-3 text-center mt-4">
             <button class="btn btn-success" type="submit">Register</button>
+          </div>
+          <div class="text-center">
+            <p>Already have an account? <a href="/login">Login here</a></p>
           </div>
         </form>
       </div>
