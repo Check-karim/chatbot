@@ -3,33 +3,54 @@
 {% block content %}
     <div class="row">
         <!-- left side -->
-        <div class="col-2">
-            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" >
-                <hr>
-                <ul class="nav nav-pills flex-column mb-auto">
+        <div class="col-md-3 col-lg-2">
+            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light rounded shadow-sm" style="min-height: 85vh;">
+                <h6 class="text-muted mb-3 px-2">NAVIGATION</h6>
+                <ul class="nav nav-pills flex-column mb-4">
                   <li class="nav-item">
                     <a href="/dashboard" class="nav-link link-dark" aria-current="page">
-                      Dashboard
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="/settings" class="nav-link link-dark">
-                      Settings
+                      <i class="bi bi-speedometer2 me-2"></i>Dashboard
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="/items" class="nav-link active">
-                      Courses
+                      <i class="bi bi-book me-2"></i>Courses
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/settings" class="nav-link link-dark">
+                      <i class="bi bi-gear me-2"></i>Settings
                     </a>
                   </li>
                 </ul>
+                
                 <hr>
+                
+                <h6 class="text-muted mb-3 px-2 mt-2">ALL COURSES</h6>
+                <div class="courses-nav-list" style="max-height: 400px; overflow-y: auto;">
+                  {% if courses %}
+                    <ul class="list-group list-group-flush">
+                      {% for course in courses %}
+                        <li class="list-group-item bg-transparent border-0 py-2 px-2">
+                          <div class="d-flex align-items-start">
+                            <i class="bi bi-journal-text text-primary me-2 mt-1"></i>
+                            <div class="flex-grow-1">
+                              <small class="fw-semibold d-block text-dark">{{course.course_code}}</small>
+                            </div>
+                          </div>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    <p class="text-muted small px-2">No courses available</p>
+                  {% endif %}
+                </div>
           </div>
         </div>
         <!-- end left side -->
 
         <!-- right side -->
-        <div class="col-8">
+        <div class="col-md-9 col-lg-10">
           {% for message in get_flashed_messages() %}
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
               {{ message }}
@@ -38,48 +59,96 @@
           {% endfor %}
           <div class="row">
             <div class="col">
-              <h3>Available Courses</h3>
-              <p class="text-muted">Explore our range of academic programs at Mount Kenya University</p>
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                  <h3 class="mb-1">All Course Enrollments</h3>
+                  <p class="text-muted">View all student course enrollments at Mount Kenya University</p>
+                </div>
+              </div>
               
-              <div class="row mt-4">
-                <div class="col-md-6 mb-3">
-                  <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Computer Science</h5>
-                      <p class="card-text">Learn cutting-edge technology and programming skills.</p>
-                      <span class="badge bg-primary">4 Years</span>
-                      <span class="badge bg-success">120 Credits</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Business Administration</h5>
-                      <p class="card-text">Develop leadership and management skills.</p>
-                      <span class="badge bg-primary">4 Years</span>
-                      <span class="badge bg-success">120 Credits</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Medicine</h5>
-                      <p class="card-text">Train to become a medical professional.</p>
-                      <span class="badge bg-primary">6 Years</span>
-                      <span class="badge bg-success">180 Credits</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title">Engineering</h5>
-                      <p class="card-text">Build the future with engineering excellence.</p>
-                      <span class="badge bg-primary">4 Years</span>
-                      <span class="badge bg-success">120 Credits</span>
-                    </div>
+              <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0 modern-table">
+                      <thead class="table-light">
+                        <tr>
+                          <th scope="col" class="px-4 py-3" style="width: 15%;">
+                            <i class="bi bi-hash"></i> Course Code
+                          </th>
+                          <th scope="col" class="px-4 py-3" style="width: 25%;">
+                            <i class="bi bi-calendar"></i> Enrollment Date
+                          </th>
+                          <th scope="col" class="px-4 py-3" style="width: 20%;">
+                            <i class="bi bi-check-circle"></i> Status
+                          </th>
+                          <th scope="col" class="px-4 py-3" style="width: 20%;">
+                            <i class="bi bi-clock-history"></i> Last Updated
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% if enrollments %}
+                        {% for course in enrollments %}
+                          <tr>
+                              <td class="px-4 py-3">
+                                <div class="d-flex align-items-center">
+                                  <div class="course-icon me-2">
+                                    <i class="bi bi-journal-bookmark-fill text-primary"></i>
+                                  </div>
+                                  <span class="fw-semibold text-dark">{{course.course_code}}</span>
+                                </div>
+                              </td>
+                              <td class="px-4 py-3">
+                                <span class="text-muted">
+                                  {% if course.created_at %}
+                                    {{ course.created_at.strftime('%B %d, %Y') if course.created_at is not string else course.created_at }}
+                                  {% else %}
+                                    N/A
+                                  {% endif %}
+                                </span>
+                              </td>
+                              <td class="px-4 py-3">
+                                {% if course.course_status == 'ENROLLED' or course.course_status == 'Enrolled' %}
+                                  <span class="badge bg-success px-3 py-2">
+                                    <i class="bi bi-check-circle-fill"></i> Enrolled
+                                  </span>
+                                {% elif course.course_status == 'IN PROGRESS' %}
+                                  <span class="badge bg-info text-dark px-3 py-2">
+                                    <i class="bi bi-arrow-repeat"></i> In Progress
+                                  </span>
+                                {% elif course.course_status == 'COMPLETED' or course.course_status == 'Completed' %}
+                                  <span class="badge bg-primary px-3 py-2">
+                                    <i class="bi bi-trophy-fill"></i> Completed
+                                  </span>
+                                {% else %}
+                                  <span class="badge bg-secondary px-3 py-2">
+                                    {{course.course_status}}
+                                  </span>
+                                {% endif %}
+                              </td>
+                              <td class="px-4 py-3">
+                                <span class="text-muted small">
+                                  {% if course.updated_at %}
+                                    {{ course.updated_at.strftime('%b %d, %Y') if course.updated_at is not string else course.updated_at }}
+                                  {% else %}
+                                    N/A
+                                  {% endif %}
+                                </span>
+                              </td>
+                          </tr>
+                        {% endfor %}
+                        {% else %}
+                          <tr>
+                            <td colspan="4" class="text-center py-5">
+                              <div class="text-muted">
+                                <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                                <p class="mt-2">No courses available at the moment</p>
+                              </div>
+                            </td>
+                          </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>

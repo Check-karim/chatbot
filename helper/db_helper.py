@@ -131,13 +131,8 @@ def get_order_status(order_id, user_id):
 def get_client_order(user_id):
     cursor = cnx.cursor(dictionary=True)
 
-    # Executing the SQL query to fetch the order status
-    query = f"SELECT " \
-            f"* " \
-            f"FROM course_tracking as ct " \
-            f"left join course_items as ci on ct.course_tracking_id = ci.course_tracking_id " \
-            f"WHERE user_id={user_id} " \
-            f"" 
+    # Executing the SQL query to fetch the user's course enrollments
+    query = f"SELECT * FROM course_items WHERE course_user_id = {user_id} ORDER BY created_at DESC"
     cursor.execute(query)
 
     # Fetching the result
@@ -146,11 +141,11 @@ def get_client_order(user_id):
     # Closing the cursor
     cursor.close()
 
-    # Returning the order status
+    # Returning the course enrollments
     if result:
         return result
     else:
-        return None
+        return []
 
 def get_orders():
     cursor = cnx.cursor(dictionary=True)
@@ -177,6 +172,53 @@ def get_orders():
         return result
     else:
         return None
+
+def get_all_courses():
+    try:
+        cursor = cnx.cursor(dictionary=True)
+
+        # Executing the SQL query to fetch all unique courses from enrollments
+        # Get distinct course codes to show in the navigation
+        query = "SELECT DISTINCT course_code, MAX(created_at) as created_at FROM course_items GROUP BY course_code ORDER BY course_code ASC"
+        cursor.execute(query)
+
+        # Fetching the result
+        result = cursor.fetchall()
+
+        # Closing the cursor
+        cursor.close()
+
+        # Returning the courses
+        if result:
+            return result
+        else:
+            return []
+    except Exception as e:
+        print(f"Error fetching courses: {e}")
+        return []
+
+def get_all_enrollments():
+    try:
+        cursor = cnx.cursor(dictionary=True)
+
+        # Executing the SQL query to fetch all course enrollments
+        query = "SELECT * FROM course_items ORDER BY created_at DESC"
+        cursor.execute(query)
+
+        # Fetching the result
+        result = cursor.fetchall()
+
+        # Closing the cursor
+        cursor.close()
+
+        # Returning all enrollments
+        if result:
+            return result
+        else:
+            return []
+    except Exception as e:
+        print(f"Error fetching enrollments: {e}")
+        return []
 
 if __name__ == "__main__":
     # print(get_total_order_price(56))

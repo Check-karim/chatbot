@@ -95,3 +95,90 @@ body {
   .cool-image:hover img {
     filter: grayscale(0%);
   }
+
+/* Modern Table Styles */
+.modern-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.modern-table thead th {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.modern-table tbody tr {
+  transition: all 0.2s ease-in-out;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.modern-table tbody tr:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.01);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.modern-table tbody td {
+  vertical-align: middle;
+  font-size: 0.9rem;
+}
+
+.card {
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.badge {
+  font-weight: 500;
+  font-size: 0.8rem;
+  border-radius: 0.375rem;
+}
+
+/* Courses nav list scrollbar */
+.courses-nav-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.courses-nav-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.courses-nav-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.courses-nav-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Course icon styling */
+.course-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e7f1ff;
+  border-radius: 8px;
+}
+
+.course-icon i {
+  font-size: 1.1rem;
+}
+
+/* Responsive table improvements */
+@media (max-width: 768px) {
+  .modern-table thead th,
+  .modern-table tbody td {
+    padding: 0.75rem 0.5rem !important;
+    font-size: 0.85rem;
+  }
+}

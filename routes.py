@@ -75,8 +75,9 @@ def dashboard():
         if user.email == 'admin@admin.com':
             return redirect('/dashboard_admin')
         else:
-            orders = db_helper.get_client_order(user.id)
-            return render_template('dashboard.html', user=user, orders=orders)
+            # orders = db_helper.get_client_order(user.id)
+            courses = db_helper.get_all_courses()
+            return render_template('dashboard.html', user=user, courses=courses)
     return redirect('/login')
 
 @main.route('/dashboard_admin')
@@ -85,7 +86,8 @@ def dashboard_admin():
         user = User.get_by_id(session['user_id'])
         if user.email == 'admin@admin.com':
             orders = db_helper.get_orders()
-            return render_template('dashboard_admin.html', user=user,orders=orders)
+            courses = db_helper.get_all_courses()
+            return render_template('dashboard_admin.html', user=user, orders=orders, courses=courses)
         else:
             return redirect('/dashboard')
     return redirect('/login')
@@ -116,7 +118,8 @@ def logout():
 def settings():
     if session.get('user_id') is not None:
         user = User.get_by_id(session['user_id'])
-        return render_template('settings.html', user=user)
+        courses = db_helper.get_all_courses()
+        return render_template('settings.html', user=user, courses=courses)
     return redirect('/login')
 
 @main.route('/edit-user', methods= ['GET','POST'])
@@ -127,3 +130,14 @@ def edit_user():
         data = edit_user_function(user)
         print(data)
         return redirect('/settings')
+
+@main.route('/items')
+def items():
+    if session.get('user_id') is not None:
+        user = User.get_by_id(session['user_id'])
+        # Get all unique courses for navigation
+        all_courses = db_helper.get_all_courses()
+        # Get all course enrollments for the main table
+        all_enrollments = db_helper.get_all_enrollments()
+        return render_template('items.html', user=user, courses=all_courses, enrollments=all_enrollments)
+    return redirect('/login')

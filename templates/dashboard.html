@@ -9,56 +9,133 @@
       {% endfor %}
     <div class="row">
         <!-- left side -->
-        <div class="col-2">
-            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" >
-                <hr>
-                <ul class="nav nav-pills flex-column mb-auto">
+        <div class="col-md-3 col-lg-2">
+            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light rounded shadow-sm" style="min-height: 85vh;">
+                <h6 class="text-muted mb-3 px-2">NAVIGATION</h6>
+                <ul class="nav nav-pills flex-column mb-4">
                   <li class="nav-item">
                     <a href="/dashboard" class="nav-link active" aria-current="page">
-                      Dashboard
+                      <i class="bi bi-speedometer2 me-2"></i>Dashboard
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="/items" class="nav-link link-dark">
-                      Courses
+                      <i class="bi bi-book me-2"></i>Courses
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="/settings" class="nav-link link-dark">
-                      Settings
+                      <i class="bi bi-gear me-2"></i>Settings
                     </a>
                   </li>
                 </ul>
+                
                 <hr>
+                
+                <h6 class="text-muted mb-3 px-2 mt-2">ALL COURSES</h6>
+                <div class="courses-nav-list" style="max-height: 400px; overflow-y: auto;">
+                  {% if courses %}
+                    <ul class="list-group list-group-flush">
+                      {% for course in courses %}
+                        <li class="list-group-item bg-transparent border-0 py-2 px-2">
+                          <div class="d-flex align-items-start">
+                            <i class="bi bi-journal-text text-primary me-2 mt-1"></i>
+                            <div class="flex-grow-1">
+                              <small class="fw-semibold d-block text-dark">{{course.course_code}}</small>
+                            </div>
+                          </div>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    <p class="text-muted small px-2">No courses available</p>
+                  {% endif %}
+                </div>
           </div>
         </div>
         <!-- end left side -->
 
         <!-- right side -->
-        <div class="col-8">
+        <div class="col-md-9 col-lg-10">
           <div class="row">
               <div class="col">
-                <h4>Your Academic Records</h4>
-                <table class="table" id="myTable">
-                  <thead>
-                    <tr>
-                      <th scope="col">Date</th>
-                      <th scope="col">Course ID</th>
-                      <th scope="col">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% if orders %}
-                    {% for order in orders %}
-                      <tr>
-                          <td>{{order.created_at}}</td>
-                          <td>{{order.course_code}}</td>
-                          <td>{{order.status}}</td>
-                      </tr>
-                    {% endfor %}
-                    {% endif %}
-                  </tbody>
-                </table>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <div>
+                    <h4 class="mb-1">Your Academic Records</h4>
+                    <p class="text-muted mb-0">Track your course enrollment and progress</p>
+                  </div>
+                </div>
+                
+                <div class="card shadow-sm border-0">
+                  <div class="card-body p-0">
+                    <div class="table-responsive">
+                      <table class="table table-hover mb-0 modern-table" id="myTable">
+                        <thead class="table-light">
+                          <tr>
+                            <th scope="col" class="px-4 py-3">
+                              <i class="bi bi-calendar3"></i> Date
+                            </th>
+                            <th scope="col" class="px-4 py-3">
+                              <i class="bi bi-journal-code"></i> Course Code
+                            </th>
+                            <th scope="col" class="px-4 py-3">
+                              <i class="bi bi-check-circle"></i> Status
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% if courses %}
+                          {% for course in courses %}
+                            <tr>
+                                <td class="px-4 py-3">
+                                  <span class="text-muted">
+                                    {% if course.created_at %}
+                                      {{ course.created_at.strftime('%B %d, %Y') if course.created_at is not string else course.created_at }}
+                                    {% else %}
+                                      N/A
+                                    {% endif %}
+                                  </span>
+                                </td>
+                                <td class="px-4 py-3">
+                                  <span class="fw-semibold text-dark">{{course.course_code}}</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                  {% if course.course_status == 'ENROLLED' or course.course_status == 'Enrolled' %}
+                                  <span class="badge bg-success px-3 py-2">
+                                    <i class="bi bi-check-circle-fill"></i> Enrolled
+                                  </span>
+                                {% elif course.course_status == 'IN PROGRESS' %}
+                                  <span class="badge bg-info text-dark px-3 py-2">
+                                    <i class="bi bi-arrow-repeat"></i> In Progress
+                                  </span>
+                                {% elif course.course_status == 'COMPLETED' or course.course_status == 'Completed' %}
+                                  <span class="badge bg-primary px-3 py-2">
+                                    <i class="bi bi-trophy-fill"></i> Completed
+                                  </span>
+                                {% else %}
+                                  <span class="badge bg-secondary px-3 py-2">
+                                    {{course.course_status}}
+                                  </span>
+                                {% endif %}
+                                </td>
+                            </tr>
+                          {% endfor %}
+                          {% else %}
+                            <tr>
+                              <td colspan="3" class="text-center py-5">
+                                <div class="text-muted">
+                                  <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                                  <p class="mt-2">No academic records found</p>
+                                  <a href="/items" class="btn btn-primary mt-2">Browse Courses</a>
+                                </div>
+                              </td>
+                            </tr>
+                          {% endif %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               </div>
           </div>
         </div>

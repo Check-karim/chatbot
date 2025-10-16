@@ -9,71 +9,143 @@
       {% endfor %}
     <div class="row">
         <!-- left side -->
-        <div class="col-2">
-            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" >
-                <hr>
-                <ul class="nav nav-pills flex-column mb-auto">
+        <div class="col-md-3 col-lg-2">
+            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light rounded shadow-sm" style="min-height: 85vh;">
+                <h6 class="text-muted mb-3 px-2">NAVIGATION</h6>
+                <ul class="nav nav-pills flex-column mb-4">
                   <li class="nav-item">
-                    <a href="/dashboard" class="nav-link active" aria-current="page">
-                      Admin Dashboard
+                    <a href="/dashboard_admin" class="nav-link active" aria-current="page">
+                      <i class="bi bi-shield-check me-2"></i>Admin Dashboard
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="/items" class="nav-link link-dark">
-                      Courses
+                      <i class="bi bi-book me-2"></i>Courses
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="/settings" class="nav-link link-dark">
-                      Settings
+                      <i class="bi bi-gear me-2"></i>Settings
                     </a>
                   </li>
                 </ul>
+                
                 <hr>
+                
+                <h6 class="text-muted mb-3 px-2 mt-2">ALL COURSES</h6>
+                <div class="courses-nav-list" style="max-height: 400px; overflow-y: auto;">
+                  {% if courses %}
+                    <ul class="list-group list-group-flush">
+                      {% for course in courses %}
+                        <li class="list-group-item bg-transparent border-0 py-2 px-2">
+                          <div class="d-flex align-items-start">
+                            <i class="bi bi-journal-text text-primary me-2 mt-1"></i>
+                            <div class="flex-grow-1">
+                              <small class="fw-semibold d-block text-dark">{{course.course_code}}</small>
+                            </div>
+                          </div>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    <p class="text-muted small px-2">No courses available</p>
+                  {% endif %}
+                </div>
           </div>
         </div>
         <!-- end left side -->
 
         <!-- right side -->
-        <div class="col-8">
+        <div class="col-md-9 col-lg-10">
           <div class="row">
               <div class="col">
-                <h4>Manage Student Records</h4>
-                <table class="table" id="myTable">
-                  <thead>
-                    <tr>
-                      <th scope="col">Email</th>
-                      <th scope="col">Record ID</th>
-                      <th scope="col">Course</th>
-                      <th scope="col">Credits</th>
-                      <th scope="col">Created At</th>
-                      <th scope="col">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% if orders %}
-                    {% for o in orders %}
-                      <tr>
-                        <td class="">{{o.email}}</td>
-                        <td class="">{{o.order_id}}</td>
-                        <td class="">{{o.quantity}}</td>
-                        <td class="">{{o.total_price}}</td>
-                        <td class="">{{o.created_at}}</td>
-                          <td class="">
-                            <form action="{{ url_for('main.update', id=o.order_id) }}" method="post">
-                              <select name="status" id="status">
-                                <option value="progress" {% if o.status == 'progress' %} selected {% endif %}>In Progress</option>
-                                <option value="delivered" {% if o.status == 'delivered' %} selected {% endif %}>Completed</option>
-                                <option value="received" {% if o.status == 'received' %} selected {% endif %}>Enrolled</option>
-                              </select>
-                              <button type="submit" class="btn btn-secondary">Update</button>
-                            </form>
-                          </td>
-                      </tr>
-                    {% endfor %}
-                    {% endif %}
-                  </tbody>
-                </table>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <div>
+                    <h4 class="mb-1"><i class="bi bi-people-fill me-2"></i>Manage Student Records</h4>
+                    <p class="text-muted mb-0">View and update student enrollment status</p>
+                  </div>
+                </div>
+                
+                <div class="card shadow-sm border-0">
+                  <div class="card-body p-0">
+                    <div class="table-responsive">
+                      <table class="table table-hover mb-0 modern-table" id="myTable">
+                        <thead class="table-light">
+                          <tr>
+                            <th scope="col" class="px-4 py-3">
+                              <i class="bi bi-envelope"></i> Email
+                            </th>
+                            <th scope="col" class="px-4 py-3">
+                              <i class="bi bi-hash"></i> Record ID
+                            </th>
+                            <th scope="col" class="px-4 py-3">
+                              <i class="bi bi-123"></i> Course
+                            </th>
+                            <th scope="col" class="px-4 py-3">
+                              <i class="bi bi-award"></i> Credits
+                            </th>
+                            <th scope="col" class="px-4 py-3">
+                              <i class="bi bi-calendar"></i> Created At
+                            </th>
+                            <th scope="col" class="px-4 py-3">
+                              <i class="bi bi-gear"></i> Status
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% if orders %}
+                          {% for o in orders %}
+                            <tr>
+                              <td class="px-4 py-3">
+                                <span class="text-muted">{{o.email}}</span>
+                              </td>
+                              <td class="px-4 py-3">
+                                <span class="badge bg-light text-dark">{{o.order_id}}</span>
+                              </td>
+                              <td class="px-4 py-3">
+                                <span class="fw-semibold">{{o.quantity}}</span>
+                              </td>
+                              <td class="px-4 py-3">
+                                <span class="text-dark">{{o.total_price}}</span>
+                              </td>
+                              <td class="px-4 py-3">
+                                <span class="text-muted small">
+                                  {% if o.created_at %}
+                                    {{ o.created_at.strftime('%b %d, %Y') if o.created_at is not string else o.created_at }}
+                                  {% else %}
+                                    N/A
+                                  {% endif %}
+                                </span>
+                              </td>
+                              <td class="px-4 py-3">
+                                <form action="{{ url_for('main.update', id=o.order_id) }}" method="post" class="d-flex align-items-center gap-2">
+                                  <select name="status" id="status" class="form-select form-select-sm">
+                                    <option value="progress" {% if o.status == 'progress' %} selected {% endif %}>In Progress</option>
+                                    <option value="delivered" {% if o.status == 'delivered' %} selected {% endif %}>Completed</option>
+                                    <option value="received" {% if o.status == 'received' %} selected {% endif %}>Enrolled</option>
+                                  </select>
+                                  <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-check-circle"></i>
+                                  </button>
+                                </form>
+                              </td>
+                            </tr>
+                          {% endfor %}
+                          {% else %}
+                            <tr>
+                              <td colspan="6" class="text-center py-5">
+                                <div class="text-muted">
+                                  <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                                  <p class="mt-2">No student records found</p>
+                                </div>
+                              </td>
+                            </tr>
+                          {% endif %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               </div>
           </div>
         </div>

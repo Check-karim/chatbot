@@ -3,55 +3,97 @@
 {% block content %}
     <div class="row">
         <!-- left side -->
-        <div class="col-2">
-            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" >
-                <hr>
-                <ul class="nav nav-pills flex-column mb-auto">
+        <div class="col-md-3 col-lg-2">
+            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light rounded shadow-sm" style="min-height: 85vh;">
+                <h6 class="text-muted mb-3 px-2">NAVIGATION</h6>
+                <ul class="nav nav-pills flex-column mb-4">
                   <li class="nav-item">
                     <a href="/dashboard" class="nav-link link-dark" aria-current="page">
-                      Dashboard
+                      <i class="bi bi-speedometer2 me-2"></i>Dashboard
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="/items" class="nav-link link-dark">
-                      Courses
+                      <i class="bi bi-book me-2"></i>Courses
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="/settings" class="nav-link active">
-                      Settings
+                      <i class="bi bi-gear me-2"></i>Settings
                     </a>
                   </li>
                 </ul>
+                
                 <hr>
+                
+                <h6 class="text-muted mb-3 px-2 mt-2">ALL COURSES</h6>
+                <div class="courses-nav-list" style="max-height: 400px; overflow-y: auto;">
+                  {% if courses %}
+                    <ul class="list-group list-group-flush">
+                      {% for course in courses %}
+                        <li class="list-group-item bg-transparent border-0 py-2 px-2">
+                          <div class="d-flex align-items-start">
+                            <i class="bi bi-journal-text text-primary me-2 mt-1"></i>
+                            <div class="flex-grow-1">
+                              <small class="fw-semibold d-block text-dark">{{course.course_code}}</small>
+                            </div>
+                          </div>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    <p class="text-muted small px-2">No courses available</p>
+                  {% endif %}
+                </div>
           </div>
         </div>
         <!-- end left side -->
 
         <!-- right side -->
-        <div class="col-8">
+        <div class="col-md-9 col-lg-10">
           {% for message in get_flashed_messages() %}
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
               {{ message }}
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
           {% endfor %}
-          <div class="row justify-content-around">
-            <h3>Update Profile</h3>
-            <div class="col-md-4">
-              <form action="/edit-user" method="post">
-                <div class="mb-3">
-                  <label for="Email_signUp" class="form-label">Email address</label>
-                  <input type="email" value="{{ user.email }}" class="form-control" id="email_update" name="email_update" placeholder="name@example.com">
+          <div class="row">
+            <div class="col">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                  <h3 class="mb-1"><i class="bi bi-person-circle me-2"></i>Update Profile</h3>
+                  <p class="text-muted">Manage your account settings and preferences</p>
                 </div>
-                <div class="mb-3">
-                  <label for="Passowrd_signUp" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="passowrd_update" name="passowrd_update" placeholder="Password">
+              </div>
+              
+              <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                  <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                      <form action="/edit-user" method="post">
+                        <div class="mb-4">
+                          <label for="email_update" class="form-label fw-semibold">
+                            <i class="bi bi-envelope me-2"></i>Email Address
+                          </label>
+                          <input type="email" value="{{ user.email }}" class="form-control form-control-lg" id="email_update" name="email_update" placeholder="name@example.com">
+                        </div>
+                        <div class="mb-4">
+                          <label for="passowrd_update" class="form-label fw-semibold">
+                            <i class="bi bi-lock me-2"></i>New Password
+                          </label>
+                          <input type="password" class="form-control form-control-lg" id="passowrd_update" name="passowrd_update" placeholder="Enter new password">
+                          <small class="text-muted">Leave blank to keep current password</small>
+                        </div>
+                        <div class="d-grid gap-2 mt-4">
+                          <button class="btn btn-success btn-lg" type="submit">
+                            <i class="bi bi-check-circle me-2"></i>Update Profile
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
                 </div>
-                <div class="mb-3 text-center mt-4">
-                  <button class="btn btn-success" type="submit">Update</button>
-                </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
