@@ -8,7 +8,8 @@ def get_str_from_food_dict(food_dict: dict):
 def extract_session_id(session_str: str):
     match = re.search(r"/sessions/(.*?)/contexts/", session_str)
     if match:
-        extracted_string = match.group(0)
+        # Return just the session ID part (group 1), not the full match
+        extracted_string = match.group(1)
         return extracted_string
 
     return ""

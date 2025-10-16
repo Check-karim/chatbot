@@ -8,21 +8,84 @@ from helper import generic_helper,db_helper
 main = Blueprint('main', __name__ ) #routename= main
 
 @main.route('/chat', methods=['POST'])
-async def handle_request():
+def handle_request():
+    """
+    Dialogflow webhook endpoint - proxies to FastAPI backend with user authentication
+    This endpoint receives webhooks from Dialogflow and forwards them to the FastAPI backend
+    after injecting the user_id from the Flask session.
+    """
+    import requests
+    
+    # DEBUG: Log that webhook was called
+    print("=" * 50, file=sys.stderr)
+    print("WEBHOOK /chat CALLED", file=sys.stderr)
+    
     payload = request.get_json(force=True)
-    intent = payload['queryResult']['intent']['displayName']
-    parameters = payload['queryResult']['parameters']
-    output_contexts = payload['queryResult']['outputContexts']
-    session_id = generic_helper.extract_session_id(output_contexts[0]["name"])
-
-    intent_handler_dict = {
-        'order.add - context: ongoing-order': chat.add_to_order,
-        'order.remove - context: ongoing-order': chat.remove_from_order,
-        'order.complete - context: ongoing-order': chat.complete_order,
-        'track.order - context: ongoing-tracking': chat.track_order
-    }
-
-    return intent_handler_dict[intent](parameters, session_id)
+    
+    # Extract user_id from Dialogflow session ID
+    # Session ID format: "user-{user_id}-{timestamp}" or default Dialogflow format
+    user_id = None
+    
+    # Try to get session ID from payload
+    if 'session' in payload:
+        session_path = payload['session']
+        print(f"Session path: {session_path}", file=sys.stderr)
+        
+        # Extract session ID from path (format: projects/.../sessions/SESSION_ID)
+        if '/sessions/' in session_path:
+            session_id = session_path.split('/sessions/')[-1]
+            print(f"Session ID: {session_id}", file=sys.stderr)
+            
+            # Check if session ID contains user_id (format: user-123-timestamp)
+            if session_id.startswith('user-'):
+                parts = session_id.split('-')
+                if len(parts) >= 2:
+                    user_id = parts[1]  # Extract user_id
+                    print(f"Extracted user_id from session: {user_id}", file=sys.stderr)
+    
+    # Fallback: Check Flask session as well
+    if not user_id:
+        user_id = session.get('user_id')
+        if user_id:
+            print(f"Got user_id from Flask session: {user_id}", file=sys.stderr)
+    
+    print(f"Final user_id: {user_id}", file=sys.stderr)
+    print("=" * 50, file=sys.stderr)
+    
+    if not user_id:
+        # User not logged in - return auth error
+        print("ERROR: No user_id found - returning auth error", file=sys.stderr)
+        return jsonify({
+            'fulfillmentText': 'Please log in to use the chatbot. You must be logged in to add, remove, or track courses.'
+        })
+    
+    # Inject user_id into the payload
+    if 'originalDetectIntentRequest' not in payload:
+        payload['originalDetectIntentRequest'] = {}
+    if 'payload' not in payload['originalDetectIntentRequest']:
+        payload['originalDetectIntentRequest']['payload'] = {}
+    
+    payload['originalDetectIntentRequest']['payload']['user_id'] = str(user_id)
+    
+    # Forward to FastAPI backend
+    try:
+        # Update this URL to match your FastAPI backend location
+        fastapi_url = 'http://localhost:8000/'  # Change port if different
+        
+        response = requests.post(
+            fastapi_url,
+            json=payload,
+            headers={'Content-Type': 'application/json'},
+            timeout=10
+        )
+        
+        return jsonify(response.json())
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Error forwarding to FastAPI backend: {e}", file=sys.stderr)
+        return jsonify({
+            'fulfillmentText': 'Sorry, there was an error processing your request. Please try again later.'
+        }), 500
 
 @main.route('/', methods = ['GET'])
 def home():

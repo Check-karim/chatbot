@@ -80,6 +80,40 @@
                 ></df-messenger>
             </div>
         </div>
+        
+        <!-- User Authentication Integration for Chatbot -->
+        <script>
+            // Set user_id for authenticated users
+            {% if session.get('user_id') %}
+            const userId = '{{ session.get("user_id") }}';
+            {% else %}
+            const userId = null;
+            {% endif %}
+            
+            window.addEventListener('dfMessengerLoaded', function(event) {
+                const dfMessenger = document.querySelector('df-messenger');
+                
+                // Set user context for Dialogflow
+                if (userId) {
+                    // Set user_id as a session parameter that will be sent with every request
+                    dfMessenger.sessionId = 'user-' + userId + '-' + Date.now();
+                    
+                    // Add user_id to every request
+                    dfMessenger.addEventListener('df-request-sent', function(event) {
+                        console.log('Sending message with user_id:', userId);
+                    });
+                    
+                    console.log('Chatbot initialized for user ID:', userId);
+                } else {
+                    console.warn('User not logged in. Chatbot features will be restricted.');
+                }
+                
+                // Monitor responses
+                dfMessenger.addEventListener('df-response-received', function(event) {
+                    console.log('Chatbot response received');
+                });
+            });
+        </script>
     {% endblock %}
 <!-- <script>
     $SCRIPT_ROOT = {{ request.script_root|tojson }};
